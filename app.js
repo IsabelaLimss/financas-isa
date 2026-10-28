@@ -39,6 +39,13 @@ function remainingC(l){return sumRows(l,balanceC)}
 function discountedC(l){return sumRows(l,discountC)}
 function lateSumC(l){return sumRows(l,lateC)}
 function completedCount(l){return l.rows.filter(completed).length}
+function summaryInstallment(l){
+ if(l.category==='Shopee'||l.id.startsWith('shopee')){
+  const values=l.rows.map(expectedC).filter(v=>v>0);
+  if(values.length)return money(fromCents(Math.max(...values)));
+ }
+ return present(l.monthly)?money(l.monthly):'<span class="muted">Variável</span>';
+}
 function contractC(l){return present(l.officialTotal)?cents(l.officialTotal):sumRows(l,expectedC)}
 // Projeção do próximo mês: valores previstos integrais, antes de descontos e juros de atraso.
 function forecastMonth(){const d=new Date();return new Date(d.getFullYear(),d.getMonth()+1,1)}
@@ -71,7 +78,7 @@ function summary(){
    const done=completedCount(l),count=l.rows.length,progress=count?done/count*100:0;
    return `<tr><td><button type="button" class="loan-link" data-open-loan="${esc(l.id)}" aria-label="Abrir detalhes de ${esc(l.name)}"><span class="bank-cell">${bankBadge(l)}<span>${esc(l.name)}</span></span></button></td>
    <td>${money(l.amount)}</td><td>${present(l.rate)?rateFmt(l.rate*100):'<span class="unknown">A confirmar</span>'}</td>
-   <td>${esc(l.n||count)}</td><td>${present(l.monthly)?money(l.monthly):'<span class="muted">Variável</span>'}</td>
+   <td>${esc(l.n||count)}</td><td>${summaryInstallment(l)}</td>
    <td><strong>${money(fromCents(contractC(l)))}</strong>${l.totalNature==='calculado'?'<span class="muted">Previsto pelas parcelas</span>':''}</td>
    <td><strong>${money(fromCents(paidC(l)))}</strong><span class="muted">${done} ${done===1?'parcela paga':'parcelas pagas'}</span></td>
    <td><strong>${money(fromCents(remainingC(l)))}</strong></td>
