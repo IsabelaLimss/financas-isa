@@ -155,6 +155,6 @@ $('tabs').addEventListener('click',e=>{let b=e.target.closest('[data-tab]');if(!
 $('view').addEventListener('click',e=>{const openBtn=e.target.closest('[data-open-loan]');if(openBtn){selected=openBtn.dataset.openLoan;render();window.scrollTo({top:0,behavior:'instant'});return}if(e.target.closest('[data-action="import"]'))$('upload').click();else if(e.target.closest('#edit-contract'))editDialog(loans.find(l=>l.id===selected));else if(e.target.closest('#add-row'))addRow();else if(e.target.closest('#back-summary')){selected='resumo';render();window.scrollTo({top:0,behavior:'instant'})}});
 $('view').addEventListener('change',e=>{const el=e.target;if(el.dataset.row!==undefined)updateRow(el)});
 $('contract-form').addEventListener('submit',formSubmit);$('close-dialog').onclick=()=>$('contract-dialog').close();$('cancel-dialog').onclick=()=>$('contract-dialog').close();$('export').onclick=exportData;$('import').onclick=()=>$('upload').click();$('upload').onchange=e=>importData(e.target.files?.[0]);$('reset').onclick=clearData;
-window.emprestimosAPI={monthlyFor:(month)=>fromCents(forecastMonthlyC(month)),navigate:()=>{window.navegarFinanceiro?.('loans');selected='resumo';render()},snapshot:()=>clone(loans)};
+window.emprestimosAPI={monthlyFor:(month)=>fromCents(totals().monthly),navigate:()=>{window.navegarFinanceiro?.('loans');selected='resumo';render()},snapshot:()=>clone(loans)};
 $('today').textContent=new Intl.DateTimeFormat('pt-BR',{day:'2-digit',month:'short',year:'numeric'}).format(new Date());init();render();
 })();
