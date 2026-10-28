@@ -1,0 +1,42 @@
+CONTROLE FINANCEIRO — VERSÃO 10.0
+
+Novo nesta versão:
+- Aba CARTÃO DE CRÉDITO: Nubank, Bradesco e Amazon, limites editáveis, vencimentos e fechamento, compras e parcelas, fatura por mês, resumo por categoria, pagamentos de faturas.
+- Aba DESPESAS: despesas fixas, variáveis e pontuais, incluindo aluguel, água, luz, internet móvel e residencial, Uber, mensalidade TUPO, cantina TUPO, mercado, IPTU/TLP, seguro incêndio, lamotrigina, fluoxetina, pós-graduação (ESPM) e lançamentos pontuais.
+- Em DESPESAS, cards para empréstimos do mês e faturas do cartão puxados automaticamente das respectivas abas e com a porcentagem do gasto total.
+- Frequências mensais, bimestrais e anuais, edição e marcação de gastos pagos; evitar duplicação de despesa cujo pagamento seja pelo cartão.
+- Preservadas as abas EMPRÉSTIMOS e RECEITAS E DÍVIDAS, além do favicon e logos da versão anterior.
+
+COMO PUBLICAR NO CLOUDFLARE PAGES
+1. Faça upload deste ZIP como nova publicação do projeto existente (ou extraia os arquivos para a raiz no Direct Upload).
+2. NÃO publique junto o JSON pessoal. Ele contém dados privados e deve ficar apenas em seus arquivos pessoais.
+3. Se já utiliza a versão anterior no mesmo endereço, exporte um backup pelo site ANTES de importar um novo JSON. Os dados existentes do navegador poderão continuar disponíveis nesse domínio.
+4. Em uma instalação nova, abra o site e use Importar backup com o JSON fornecido separadamente. Limites e gastos dos cartões permanecem vazios até serem registrados; valores não informados não foram inventados.
+5. Após registrar ou alterar valores, exporte periodicamente um novo backup em JSON. Não há sincronização entre navegadores ou dispositivos.
+
+NOTAS
+- O total mensal de empréstimos vem do controle de empréstimos, usando valores cheios das parcelas previstas do mês.
+- A fatura mensal vem das compras e parcelas registradas nos três cartões de crédito.
+- Uma despesa marcada como paga por cartão não soma novamente no total de despesas.
+- Os percentuais usam a soma dos grupos de despesas diretas, empréstimos e faturas do mês; os dois últimos são considerados apenas uma vez.
+- Dados são salvos localmente no navegador. Este ZIP público não contém os valores pessoais.
+
+VALIDAÇÃO REALIZADA
+- Testes em Chrome headless: importação, navegação, edição de limite, compra parcelada, cálculo mensal da fatura, gastos pontuais, percentuais sobre o total, integração entre abas, exportação/importação do backup e regressão básica das abas anteriores.
+- Verificação da largura e renderização em desktop e mobile sem erros de JavaScript.
+- Integridade do pacote ZIP verificada.
+
+PENDENTE
+- Publicação no Cloudflare Pages e verificação após deploy na URL definitiva.
+
+VERSÃO 11 — NOVO CONTROLE DE ENTRADAS E SALDO MENSAL
+- Em Despesas, cadastre salário, rendas extras e outras entradas como mensal ou pontual.
+- Entradas e despesas selecionadas no mês geram saldo previsto (positivo/negativo).
+- Importação e exportação mantêm as entradas junto com os dados preexistentes.
+- Informações continuam salvas apenas no navegador; nenhum valor pessoal está no ZIP público.
+
+VERSÃO 12 — AJUSTE VISUAL PONTUAL
+- Na aba Despesas, os seis cards de gasto ficam juntos no topo: Total do mês, Fixas, Variáveis, Pontuais, Empréstimos e Cartão.
+- Os gráficos vêm logo abaixo desses cards.
+- O conjunto Entradas do mês / Despesas do mês / Saldo previsto, seguido pela tabela de entradas, foi posicionado após os gráficos e antes das tabelas de despesas.
+- Não duplicar cartões de Empréstimos ou Cartão no corpo da página. Os registros e a lógica financeira permanecem iguais à versão 11.
