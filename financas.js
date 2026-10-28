@@ -45,7 +45,7 @@
  const limitsC=()=>state.cards.reduce((a,c)=>a+cent(c.limit),0);
  const loanC=()=>cent(window.emprestimosAPI?.monthlyFor(month)||0);
  const directExpenses=(type)=>state.expenses.filter(r=>r.type===type&&r.method==='direto'&&occurs(r,month));
- const visibleExpenses=(type)=>state.expenses.filter(r=>r.type===type&&occurs(r,month));
+ const visibleExpenses=(type)=>state.expenses.filter(r=>r.type===type&&(occurs(r,month)||(type==='fixa'&&['IPTU / TLP','Seguro incêndio'].includes(r.name)&&cent(r.amount)===0&&month>=r.startMonth&&(!r.endMonth||month<=r.endMonth))));
  function occurs(r,m){if(r.type==='pontual')return r.date?.slice(0,7)===m;
  if(m<r.startMonth||r.endMonth&&m>r.endMonth)return false;
  let n=(Number(m.slice(0,4))-Number(r.startMonth.slice(0,4)))*12+(Number(m.slice(5,7))-Number(r.startMonth.slice(5,7)));
