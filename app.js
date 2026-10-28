@@ -39,12 +39,16 @@ function remainingC(l){return sumRows(l,balanceC)}
 function discountedC(l){return sumRows(l,discountC)}
 function lateSumC(l){return sumRows(l,lateC)}
 function completedCount(l){return l.rows.filter(completed).length}
-function summaryInstallment(l){
+function summaryInstallmentC(l){
  if(l.category==='Shopee'||l.id.startsWith('shopee')){
   const values=l.rows.map(expectedC).filter(v=>v>0);
-  if(values.length)return money(fromCents(Math.max(...values)));
+  if(values.length)return Math.max(...values);
  }
- return present(l.monthly)?money(l.monthly):'<span class="muted">Variável</span>';
+ return present(l.monthly)?cents(l.monthly):null;
+}
+function summaryInstallment(l){
+ const amount=summaryInstallmentC(l);
+ return amount===null?'<span class="muted">Variável</span>':money(fromCents(amount));
 }
 function contractC(l){return present(l.officialTotal)?cents(l.officialTotal):sumRows(l,expectedC)}
 // Projeção do próximo mês: valores previstos integrais, antes de descontos e juros de atraso.
@@ -64,7 +68,7 @@ function forecastMonthlyC(month=forecastMonthKey()){
   return sum;
  },0);
 }
-function totals(){let out={received:0,monthly:0,paid:0,remaining:0,discount:0,late:0,waived:0,contracted:0,cost:0,active:0,done:0,installments:0};for(const l of loans){out.received+=cents(l.amount);out.paid+=paidC(l);out.remaining+=remainingC(l);out.discount+=discountedC(l);out.late+=lateSumC(l);out.waived+=cents(l.waived);out.contracted+=contractC(l);out.active+=remainingC(l)>0?1:0;out.done+=completedCount(l);out.installments+=l.rows.length;}out.cost=out.contracted-out.received;out.monthly=forecastMonthlyC();return out}
+function totals(){let out={received:0,monthly:0,paid:0,remaining:0,discount:0,late:0,waived:0,contracted:0,cost:0,active:0,done:0,installments:0};for(const l of loans){out.received+=cents(l.amount);out.paid+=paidC(l);out.remaining+=remainingC(l);out.discount+=discountedC(l);out.late+=lateSumC(l);out.waived+=cents(l.waived);out.contracted+=contractC(l);out.active+=remainingC(l)>0?1:0;out.done+=completedCount(l);out.installments+=l.rows.length;}out.cost=out.contracted-out.received;out.monthly=loans.reduce((sum,l)=>remainingC(l)>0?sum+(summaryInstallmentC(l)??0):sum,0);return out}
 const icon=(name)=>{const paths={cash:'<circle cx="12" cy="12" r="9"/><path d="M15 8.6c-.8-.7-1.8-1-3-1-1.9 0-3 .9-3 2.2 0 3.3 6 1.3 6 4.4 0 1.4-1.4 2.3-3.1 2.3-1.3 0-2.5-.3-3.4-1.1M12 5v14"/>',calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M7 14h2M12 14h2M17 14h1M7 18h2M12 18h2"/>',check:'<path d="m4 12 5 5L20 6"/>',percent:'<circle cx="7" cy="7" r="2"/><circle cx="17" cy="17" r="2"/><path d="M5 19 19 5"/>',files:'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h6"/>'};return `<svg viewBox="0 0 24 24" aria-hidden="true">${paths[name]||paths.cash}</svg>`};
 function metric(name,label,value,extra=''){return `<article class="metric ${name==='check'?'teal':''}"><div class="metric-icon">${icon(name)}</div><div class="metric-body"><div class="metric-label">${esc(label)}</div><div class="metric-value">${esc(value)}</div>${extra?`<div class="metric-extra">${esc(extra)}</div>`:''}</div></article>`}
 function bankBadge(l,large=false){let id=l.id==='nubank'?'nubank':l.id==='bradesco'?'bradesco':l.id==='inter'?'inter':'shopee';const sign=({nubank:'nu',bradesco:'B',inter:'inter',shopee:'SP'})[id];return `<span aria-hidden="true" class="bank-badge ${id} ${large?'large':''}">${sign}</span>`}
@@ -90,7 +94,7 @@ function summary(){
  ${metric('check','Empréstimos quitados',String(quitados),'Contratos finalizados')}
  ${metric('cash','Valor a devolver',money(fromCents(m.contracted)),'Total contratual previsto')}
  ${metric('cash','Valor recebido',money(fromCents(m.received)),'Soma dos nove empréstimos')}
- ${metric('calendar','Total das parcelas por mês',money(fromCents(m.monthly)),`Próximo mês: ${new Intl.DateTimeFormat('pt-BR',{month:'short',year:'numeric'}).format(forecastMonth())} · sem descontos`)}
+ ${metric('calendar','Total das parcelas por mês',money(fromCents(m.monthly)),'Soma das parcelas dos contratos ativos · sem descontos')}
  ${metric('check','Total pago',money(fromCents(m.paid)),`${pctPaid} do total projetado`)}
  ${metric('percent','Quanto falta',money(fromCents(m.remaining)),`${pctUnpaid} do total projetado`)}
  ${metric('cash','Total de juros',money(fromCents(m.cost+m.late)),'Juros/encargos + multas registradas')}
