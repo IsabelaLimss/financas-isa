@@ -1,0 +1,8 @@
+# Deploy only site assets; never expose repository or deployment metadata.
+.git/
+.github/
+node_modules/
+wrangler.jsonc
+.assetsignore
+_headers
+LEIA-ME.txt
